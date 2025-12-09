@@ -1,0 +1,12 @@
+<%- include('partials/header', { title: title }) %>
+
+<div class="container">
+    <div class="error-page">
+        <h1><%= statusCode %></h1>
+        <p><%= message %></p>
+        <a href="/" class="btn">Go Home</a>
+    </div>
+</div>
+
+<%- include('partials/footer') %>
+

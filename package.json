@@ -1,0 +1,54 @@
+{
+  "name": "filmyfly-backend",
+  "version": "1.0.0",
+  "description": "Express.js backend with EJS and TypeScript",
+  "main": "dist/app.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "dev": "nodemon",
+    "dev:ts-node": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "watch": "tsc --watch",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "prisma:push": "prisma db push",
+    "postinstall": "prisma generate",
+    "import:movies": "tsx scripts/import-movies.ts",
+    "seed:categories": "tsx scripts/seed-categories.ts",
+    "seed:settings": "tsx scripts/seed-settings.ts"
+  },
+  "keywords": [
+    "express",
+    "ejs",
+    "typescript",
+    "backend"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.1.0",
+    "@prisma/client": "^7.1.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^17.2.3",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "firebase-admin": "^12.0.0",
+    "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.6",
+    "@types/express": "^4.17.17",
+    "@types/express-session": "^1.17.10",
+    "@types/node": "^20.19.25",
+    "@types/pg": "^8.15.6",
+    "nodemon": "^3.0.1",
+    "prisma": "^7.1.0",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.1.6"
+  }
+}

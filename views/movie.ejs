@@ -1,0 +1,134 @@
+<%- include('partials/header', { title: title }) %>
+
+
+
+<script> document.title = '<%= movie.title %>' </script>
+</div>
+<style>
+.header4{
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
+
+  .dl {
+    margin: 1px 12px;
+    background-image: linear-gradient(#0066ff, #003d99);
+    padding: 15px 6px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    border-radius: 5px;
+  }
+
+  .dll {
+    margin: 5px 12px;
+    background-image: linear-gradient(#ff1a75, #b30047);
+    padding: 15px 6px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    border-radius: 5px;
+  }
+
+  .dlll {
+    margin: 5px 12px;
+    background-image: linear-gradient(#751aff, #4700b3);
+    padding: 15px 6px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    border-radius: 4px;
+  }
+</style>
+<div align="center">
+  <h2><%= movie.title %></h2>
+</div>
+<div align="center">
+  <div class="movie-thumb"><img
+      src="<%= movie.thumbnail %>"
+      width="280px" alt="<%= movie.title %>" />
+    <center>
+  </div>
+</div>
+</div>
+</div>
+</center>
+<h2>
+  <center>
+    <font color="red">👉File Info👈 </font>
+  </center>
+</h2>
+<div class="fname">Name: <div class="colora"><%= movie.title %>
+  </div>
+</div>
+<meta name="keywords" content="" />
+<div class="fname">Genre: <div class="colorb"><%= movie.genre || '' %></div>
+</div>
+<div class="fname">Duration: <div class="colorc"><%= movie.duration || '' %></div>
+</div>
+<div class="fname">Release Date: <div class="colord"><%= movie.releaseYear || '' %></div>
+</div>
+<div class="fname">Language: <div class="colore"><%= movie.languages || '' %></div>
+</div>
+<div class="fname">Starcast: <div class="colorf"><%= movie.cast || '' %></div>
+</div>
+<div class="fname">Size: <div class="colorg"><%= movie.sizes || '' %></div>
+</div>
+<div class="fname" 
+>Description: <div class="colorg"><%= movie.description || '' %></div>
+<center> </center>
+<center>
+  <h3 class="header4">DOWNLOAD THIS MOVIE</h3>
+</center>
+<div class="dlbtn"><a href="<%= downloadRedirectUrl %><%= movie.downloadUrl %>" class="dl" target="_blank" >Download <%= movie.sizes || '' %></a></div>
+<div class="notice"></div>
+<center>
+  <h3 class="header4">SCREENSHOT</h3>
+  <div class="article">
+    <div class="ss"><img src="<%= movie.screenshot %>"
+        style="max-width: 100%;"
+        alt="<%= movie.title %> screenshot" /></div>
+  </div>
+  <center />
+  </div>
+  <div align="center"></div>
+  </div>
+
+<!-- end -->
+
+<!-- releted movies code start -->
+<%- include('partials/releted_movies') %>
+<!-- releted movies code end -->
+
+
+
+
+    <!-- ----------------------------- -->
+    <div align="center">
+    <div class="brcrmb cap">
+      <a href="/">Home</a>
+      <% if (movie.category) { %>
+        » <a href="/page-cat/<%= movie.category.id %>/<%= movie.category.slug %>"><%= movie.category.name %></a>
+      <% } %>
+      » <%= movie.title %>
+    </div>
+
+    <div class="addthis_inline_share_toolbox"></div><br />
+    <div class="A1">
+      <div align="left">
+        <font color="green"><b>Tag:</b></font>
+        <%= longTag %>
+      </div>
+    </div>
+    </div> 
+    
+    
+    <!-- ---------------------------------------------- -->
+    
+    
+
+<%- include('partials/footer') %>
+

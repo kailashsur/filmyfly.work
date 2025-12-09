@@ -1,0 +1,105 @@
+<%- include('partials/header', { title: title }) %>
+
+
+
+<center>
+    <h1><a href="/page-how-to-download-movie">How To Download Movies On FilmyFly </a></h1>
+  </center>
+
+
+  <!-- trending movies code start -->
+  <style>
+    .A10 {
+      background: -webkit-linear-gradient(top, #fcfeee 0%, #eeeeee 100%);
+      border-bottom: 1px solid#ccc;
+      font-weight: normal;
+      padding: 4px;
+    }
+  </style>
+ 
+<%- include('partials/trending_movies.ejs') %>
+
+
+  <!-- recent movies code start -->
+  <%- include('partials/recent_movies.ejs') %>
+  <!-- recent movies code end -->
+
+  <div>
+    <h2>
+      <center>📂Select Category📂</center>
+    </h2>
+  </div>
+  <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
+    <center>
+      <div class="page">
+        <% if (hasPrevPage) { %>
+          <a href="/?page=<%= currentPage - 1 %>">❮ Previous</a>
+        <% } %>
+        <% if (hasPrevPage && hasNextPage) { %>
+          <span style="margin: 0 10px;">
+            Page <%= currentPage %>
+          </span>
+        <% } %>
+        <% if (hasNextPage) { %>
+          <a href="/?page=<%= currentPage + 1 %>">Next ❯</a>
+        <% } %>
+      </div>
+      
+    </center>
+  <% } %>
+  <br />
+  
+  <% if (typeof categories !== 'undefined' && categories && categories.length > 0) { %>
+    <% categories.forEach(function(category) { %>
+      <div>
+        <div class="cat">
+          <a href="/page-cat/<%= category.id %>/<%= category.slug %>">
+            <div>
+              <img src="/images/ff32.png" alt="FilmyFly" />&nbsp;<b><%= category.name %></b>
+            </div>
+          </a>
+        </div>
+      </div>
+    <% }); %>
+  <% } else { %>
+    <!-- Fallback if categories are not loaded -->
+    <a href="/page-cat/42/web-series">
+      <div class="cat"><i class=""></i>📂 Web Series</div>
+    </a>
+  <% } %>
+  
+  <br />
+  <div class="A1">
+    <div align="left">
+      <font color="green"><b>Tag:</b></font>Download movies online in HD with FilmyFly.xy No registration required.
+      You can download latest Hollywood films, Bollywood films, Tamil films and more at a single click with HD quality
+      and enjoy the best HD movies for free! – <strong>filmyFly.xyz</strong><br /><strong>filmy4wapp</strong>
+      filmy4waap xyz,filmy4wapp official,filmy4waap south movie 2024,filmy4wap movie 2024,filmy4wap link,filmy4wap.xyz
+      pushpa 2,filmy4wap xyz link,filmy4wap south movie 2024 new,filmy4wap xyz nota 2024 south hindi,filmy4wap app
+      <strong>filmy4wap.in app</strong> <strong>Filmy4wap.xyz</strong>filmy4wap website, jalshamoviez hd
+      <strong>filmyFly.xyz</strong> no.1 movie site new latest movie download filmy4wap.xy new <strong>bollywood movie
+        filmy4wap.xyz</strong>, latest bollywood movie filmy4wap filmy4web, South Indian Hindi Dubbed movie
+      filmy4wap.xyz south hindi dubbed <b>filmy4wap best south Indian movie</b>, top bollywood movies filmy4wap
+      superhit hindi dubbed movie punjabi movie filmy4wap hollywood movie filmy4wa.xyz action movie filmy4wap thriller
+      movie filmy4wap filmyzila filmy4wap <strong>filmyzilla filmy4wap</strong> sci fi movie filmy4wap comedy film
+      filmy4wap filmy store, mcu movies filmy4wap marvel's movie filmy4wap marvel cinematic universe filmy4wap
+      avengers movie filmy4wap tamil movie filmy4wap telegu movie filmy4wap new released movie filmy4wap trending
+      movie filmy4wap free movie download filmy4wap hd movie download filmy4wap 480p hd movie filmy4wap 720p hd movie
+      filmy4wap 300mb movie filmy4wap full hd movie Filmy4Wap no1 hd movie download site filmy4wap, download in
+      <strong>7starhd</strong>, 9xmovie
+    </div>
+
+    
+    
+    
+    <!-- Google tag (gtag.js) -->
+    <!-- <script async src="../www.googletagmanager.com/gtag/jsa805?id=G-E811WPZXL6"></script>
+    <script>  window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'G-E811WPZXL6');</script> -->
+    
+  </div> 
+
+ 
+  
+
+<%- include('partials/footer') %>
+

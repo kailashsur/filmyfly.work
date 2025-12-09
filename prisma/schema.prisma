@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.Text
+  email     String   @db.Text
+  password  String   @db.Text
+  role      String   @default("user") @db.Text
+  status    String   @default("active") @db.Text
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  @@map("users")
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  slug        String   @unique
+  description String?  @db.Text
+  createdAt   DateTime @default(now()) @map("createdAt")
+  updatedAt   DateTime @updatedAt @map("updatedAt")
+  movies      Movie[]
+
+  @@map("categories")
+}
+
+model Movie {
+  id          Int       @id @default(autoincrement())
+  title       String
+  slug        String    @unique
+  description String?   @db.Text
+  thumbnail   String?   @db.Text
+  genre       String?
+  languages   String?
+  duration    String?
+  releaseYear Int?      @map("releaseYear")
+  cast        String?
+  sizes       String?
+  downloadUrl String?   @db.Text @map("downloadUrl")
+  screenshot  String?   @db.Text
+  keywords    String?
+  categoryId  Int?       @map("categoryId")
+  category    Category?  @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime  @default(now()) @map("createdAt")
+  updatedAt   DateTime  @updatedAt @map("updatedAt")
+  TrendingMovie TrendingMovie?
+
+  @@map("movies")
+}
+
+model TrendingMovie {
+  id        Int      @id @default(autoincrement())
+  movieId   Int      @unique @map("movieId")
+  movie     Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  order     Int      @default(0)
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  @@map("trending_movies")
+}
+
+model Setting {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique
+  value       String   @db.Text
+  description String?  @db.Text
+  createdAt   DateTime @default(now()) @map("createdAt")
+  updatedAt   DateTime @updatedAt @map("updatedAt")
+
+  @@map("settings")
+}
+
+model StaticPage {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique
+  content     String   @db.Text
+  metaTitle   String?  @db.Text
+  metaDescription String? @db.Text
+  metaKeywords String? @db.Text
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("createdAt")
+  updatedAt   DateTime @updatedAt @map("updatedAt")
+
+  @@map("static_pages")
+}

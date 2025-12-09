@@ -1,0 +1,49 @@
+<h2 style="text-align: center;"> Related Movies </h2>
+<style>
+  .A10 {
+    background: -webkit-linear-gradient(top, #fcfeee 0%, #eeeeee 100%);
+    border-bottom: 1px solid#ccc;
+    font-weight: normal;
+    padding: 4px;
+    margin-bottom: 4px;
+  }
+</style>
+
+<% if (typeof relatedMovies !== 'undefined' && relatedMovies && relatedMovies.length > 0) { %>
+  <% relatedMovies.forEach(function(relatedMovie) { %>
+    <div class="A10">
+      <table width="100%">
+        <tr>
+          <td width="63">
+            <% if (relatedMovie.thumbnail) { %>
+              <a href="/<%= relatedMovie.slug %>">
+                <img src="<%= relatedMovie.thumbnail %>" width="60" height="65" alt="<%= relatedMovie.title %>" />
+              </a>
+            <% } else { %>
+              <a href="/<%= relatedMovie.slug %>">
+                <img src="https://via.placeholder.com/60x65?text=No+Image" width="60" height="65" alt="<%= relatedMovie.title %>" />
+              </a>
+            <% } %>
+          </td>
+          <td align="left" width="100%">
+            <a href="/<%= relatedMovie.slug %>">
+              <div style="color: #3D991F;font-size: 15px;font-weight:bold;">
+                <%= relatedMovie.title %><% if (relatedMovie.releaseYear) { %> (<%= relatedMovie.releaseYear %>)<% } %>
+              </div>
+            </a>
+          </td>
+        </tr>
+      </table>
+    </div>
+  <% }); %>
+<% } else { %>
+  <div class="A10">
+    <table width="100%">
+      <tr>
+        <td align="center" width="100%">
+          <div style="color: #666;font-size: 14px;padding: 10px;">No related movies found.</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+<% } %>

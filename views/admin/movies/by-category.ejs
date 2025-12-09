@@ -1,0 +1,254 @@
+<%- include('../../partials/admin_header', { title: title }) %>
+
+<div class="container">
+    <div class="admin-dashboard">
+        <div class="admin-header">
+            <h1><%= title %></h1>
+            <div class="admin-user-info">
+                <a href="/admin" class="btn btn-secondary">Go to Dashboard</a>
+                <a href="/admin/movies" class="btn btn-secondary">Back to Movies</a>
+            </div>
+        </div>
+
+        <% if (error) { %>
+            <div class="alert alert-error">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <!-- Category Selection Dropdown -->
+        <div class="category-selector">
+            <form method="GET" action="/admin/movies/by-category" class="category-form">
+                <div class="form-group">
+                    <label for="categoryId">Select Category:</label>
+                    <select id="categoryId" name="categoryId" onchange="this.form.submit()">
+                        <option value="">-- Select a Category --</option>
+                        <% if (categories && categories.length > 0) { %>
+                            <% categories.forEach(function(category) { %>
+                                <option value="<%= category.id %>" <%= (selectedCategoryId == category.id) ? 'selected' : '' %>>
+                                    <%= category.name %> (<%= category._count.movies %> movies)
+                                </option>
+                            <% }); %>
+                        <% } %>
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <!-- Movies Display -->
+        <% if (selectedCategory) { %>
+            <div class="category-section">
+                <div class="category-header">
+                    <h2><%= selectedCategory.name %></h2>
+                    <span class="movie-count">Total: <%= totalMovies %> movies</span>
+                </div>
+
+                <% if (movies && movies.length > 0) { %>
+                    <div class="movies-grid">
+                        <% movies.forEach(function(movie) { %>
+                            <div class="movie-card">
+                                <% if (movie.thumbnail) { %>
+                                    <a href="/<%= movie.slug %>" target="_blank">
+                                        <img src="<%= movie.thumbnail %>" alt="<%= movie.title %>" />
+                                    </a>
+                                <% } %>
+                                <div class="movie-info">
+                                    <h3>
+                                        <a href="/<%= movie.slug %>" target="_blank"><%= movie.title %></a>
+                                    </h3>
+                                    <% if (movie.releaseYear) { %>
+                                        <p class="movie-year"><%= movie.releaseYear %></p>
+                                    <% } %>
+                                    <div class="movie-actions">
+                                        <a href="/admin/movies/edit/<%= movie.id %>" class="btn btn-small">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+
+                    <!-- Pagination -->
+                    <% if (totalPages > 1) { %>
+                        <div class="pagination">
+                            <% if (hasPrevPage) { %>
+                                <a href="/admin/movies/by-category?categoryId=<%= selectedCategoryId %>&page=<%= currentPage - 1 %>" class="btn">Previous</a>
+                            <% } %>
+                            
+                            <span>Page <%= currentPage %> of <%= totalPages %></span>
+                            
+                            <% if (hasNextPage) { %>
+                                <a href="/admin/movies/by-category?categoryId=<%= selectedCategoryId %>&page=<%= currentPage + 1 %>" class="btn">Next</a>
+                            <% } %>
+                        </div>
+                    <% } %>
+                <% } else { %>
+                    <p class="no-movies">No movies found in this category.</p>
+                <% } %>
+            </div>
+        <% } else if (selectedCategoryId) { %>
+            <div class="empty-state">
+                <p>Category not found.</p>
+            </div>
+        <% } else { %>
+            <div class="empty-state">
+                <p>Please select a category from the dropdown above to view movies.</p>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<style>
+.category-selector {
+    margin: 20px 0;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.category-form {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.category-form .form-group {
+    flex: 1;
+    margin: 0;
+}
+
+.category-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+.category-form select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+}
+
+.category-form select:hover {
+    border-color: #007bff;
+}
+
+.category-section {
+    margin-top: 20px;
+}
+
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ddd;
+}
+
+.category-header h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.movie-count {
+    background: #007bff;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.movies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.movie-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.movie-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.movie-card img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+}
+
+.movie-info {
+    padding: 15px;
+}
+
+.movie-info h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+}
+
+.movie-info h3 a {
+    color: #333;
+    text-decoration: none;
+}
+
+.movie-info h3 a:hover {
+    color: #007bff;
+}
+
+.movie-year {
+    color: #666;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.movie-actions {
+    margin-top: 10px;
+}
+
+.btn-small {
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+.pagination {
+    margin-top: 30px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.pagination span {
+    padding: 0 15px;
+}
+
+.no-movies {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+</style>
+
+<%- include('../../partials/admin_footer') %>

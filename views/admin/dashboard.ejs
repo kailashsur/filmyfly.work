@@ -1,0 +1,56 @@
+<%- include('../partials/admin_header', { title: title }) %>
+
+<div class="container">
+    <div class="admin-dashboard">
+        <div class="admin-header">
+            <h1><%= title %></h1>
+            <div class="admin-user-info">
+                <span>Welcome, <%= user?.email || 'Admin' %></span>
+                <form method="POST" action="/admin/logout" style="display: inline;">
+                    <button type="submit" class="btn btn-secondary">Logout</button>
+                </form>
+            </div>
+        </div>
+        
+            <div class="admin-grid">
+                <div class="admin-card">
+                    <h3>Manage Movies</h3>
+                    <p>Add, edit, and manage movies</p>
+                    <a href="/admin/movies" class="btn">Manage Movies</a>
+                </div>
+                
+                <div class="admin-card">
+                    <h3>Movies by Category</h3>
+                    <p>View movies organized by category</p>
+                    <a href="/admin/movies/by-category" class="btn">View by Category</a>
+                </div>
+                
+            <div class="admin-card">
+                <h3>System Check</h3>
+                <p>Check the system status</p>
+                <a href="/admin/system-check" class="btn">System Check</a>
+            </div>
+            
+            <div class="admin-card">
+                <h3>Settings</h3>
+                <p>Configure site settings</p>
+                <a href="/admin/settings" class="btn">Settings</a>
+            </div>
+            
+            <div class="admin-card">
+                <h3>Static Pages</h3>
+                <p>Manage Privacy Policy, Contact Us, About Us, DMCA, etc.</p>
+                <a href="/admin/static-pages" class="btn">Manage Pages</a>
+            </div>
+            
+            <div class="admin-card">
+                <h3>View Logs</h3>
+                <p>View and manage application logs in real-time</p>
+                <a href="/admin/logs" class="btn">View Logs</a>
+            </div>
+            </div>
+    </div>
+</div>
+
+<%- include('../partials/admin_footer') %>
+

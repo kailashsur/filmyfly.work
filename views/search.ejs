@@ -1,0 +1,90 @@
+<%- include('partials/header', { title: title }) %>
+
+<style>
+  .A10 {
+    background: -webkit-linear-gradient(top, #fcfeee 0%, #eeeeee 100%);
+    border-bottom: 1px solid#ccc;
+    font-weight: normal;
+    padding: 4px;
+    margin-bottom: 4px;
+  }
+</style>
+<% if (query && query.trim() !== '') { %>
+  <div align="center"><h2>Search Results For <%= query %></h2></div>
+<% } else { %>
+  <div align="center"><h2>Search Results</h2></div>
+<% } %>
+<% if (typeof movies !== 'undefined' && movies && movies.length > 0) { %>
+    <% movies.forEach(function(movie) { %>
+      <div class="A10">
+        <table width="100%">
+          <tr>
+            <td width="63">
+              <% if (movie.thumbnail) { %>
+                <a href="/<%= movie.slug %>">
+                  <img src="<%= movie.thumbnail %>" width="60" height="65" alt="<%= movie.title %>" />
+                </a>
+              <% } else { %>
+                <a href="/<%= movie.slug %>">
+                  <img src="https://via.placeholder.com/60x65?text=No+Image" width="60" height="65" alt="<%= movie.title %>" />
+                </a>
+              <% } %>
+            </td>
+            <td align="left" width="100%">
+              <a href="/<%= movie.slug %>">
+                <div style="color: #3D991F;font-size: 15px;font-weight:bold;">
+                  <%= movie.title %><% if (movie.releaseYear) { %> (<%= movie.releaseYear %>)<% } %>
+                </div>
+              </a>
+            </td>
+          </tr>
+        </table>
+      </div>
+    <% }); %>
+
+    <!-- Pagination -->
+    <% if (typeof totalPages !== 'undefined' && totalPages > 1) { %>
+      <center>
+        <div class="page">
+          <% if (hasPrevPage) { %>
+            <a href="/search?to-search=<%= encodeURIComponent(query) %>&page=<%= currentPage - 1 %>">❮ Previous</a>
+          <% } else { %>
+            <span class="btn disabled">❮ Previous</span>
+          <% } %>
+          <% if (hasPrevPage && hasNextPage) { %>
+            <span style="margin: 0 10px;">
+              Page <%= currentPage %>
+            </span>
+          <% } %>
+          <% if (hasNextPage) { %>
+            <a href="/search?to-search=<%= encodeURIComponent(query) %>&page=<%= currentPage + 1 %>">Next ❯</a>
+          <% } else { %>
+            <span class="btn disabled">Next ❯</span>
+          <% } %>
+        </div>
+      </center>
+    <% } %>
+  <% } else if (query && query.trim() !== '') { %>
+    <div class="A10">
+      <table width="100%">
+        <tr>
+          <td align="center" width="100%">
+            <div style="color: #666;font-size: 14px;padding: 10px;">No movies found matching "<%= query %>"</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  <% } else { %>
+    <div class="A10">
+      <table width="100%">
+        <tr>
+          <td align="center" width="100%">
+            <div style="color: #666;font-size: 14px;padding: 10px;">Please enter a search query</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  <% } %>
+
+<%- include('partials/footer') %>
+

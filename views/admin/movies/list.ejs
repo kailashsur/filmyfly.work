@@ -1,0 +1,176 @@
+<%- include('../../partials/admin_header', { title: title }) %>
+
+<div class="container">
+    <div class="admin-movies-page">
+        <div class="page-header">
+            <h1>Manage Movies</h1>
+            <div class="header-actions">
+                <a href="/admin" class="btn btn-secondary">Go to Dashboard</a>
+                <a href="/admin/movies/add" class="btn btn-primary">Add New Movie</a>
+                <a href="/admin/movies/bulk-add" class="btn btn-secondary">Bulk Add Movies</a>
+            </div>
+        </div>
+
+        <% if (typeof query !== 'undefined' && query.success) { %>
+            <div class="alert alert-success">
+                <%= query.success %>
+            </div>
+        <% } %>
+
+        <% if (typeof query !== 'undefined' && query.error) { %>
+            <div class="alert alert-error">
+                <%= query.error %>
+            </div>
+        <% } %>
+
+        <!-- Trending Movies Section -->
+        <% if (trendingMovies && trendingMovies.length > 0) { %>
+            <div class="trending-section">
+                <div class="section-header">
+                    <h2>🔥 Trending Movies</h2>
+                    <span class="trending-count"><%= trendingMovies.length %> movie(s)</span>
+                </div>
+                <div class="trending-movies-container">
+                    <table class="movies-table trending-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Slug</th>
+                                <th>Genre</th>
+                                <th>Release Year</th>
+                                <th>Order</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% trendingMovies.forEach(movie => { %>
+                                <tr class="trending-row">
+                                    <td><%= movie.id %></td>
+                                    <td><strong><%= movie.title %></strong></td>
+                                    <td><%= movie.slug %></td>
+                                    <td><%= movie.genre || 'N/A' %></td>
+                                    <td><%= movie.releaseYear || 'N/A' %></td>
+                                    <td>
+                                        <% 
+                                        // Find the order from the trending data
+                                        let movieOrder = 0;
+                                        if (typeof trendingMoviesData !== 'undefined' && trendingMoviesData && Array.isArray(trendingMoviesData)) {
+                                            const trendingData = trendingMoviesData.find(tm => tm && tm.movieId === movie.id);
+                                            movieOrder = trendingData ? (trendingData.order || 0) : 0;
+                                        }
+                                        %>
+                                        <%= movieOrder %>
+                                    </td>
+                                    <td class="actions">
+                                        <form method="POST" action="/admin/movies/trending/remove/<%= movie.id %>" style="display: inline;">
+                                            <button type="submit" class="btn btn-sm btn-trending-remove" title="Remove from Trending">Remove Trending</button>
+                                        </form>
+                                        <a href="/admin/movies/edit/<%= movie.id %>" class="btn btn-sm btn-edit">Edit</a>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <% } else { %>
+            <div class="trending-section">
+                <div class="section-header">
+                    <h2>🔥 Trending Movies</h2>
+                    <span class="trending-count">No trending movies</span>
+                </div>
+                <div class="empty-trending">
+                    <p>No movies are currently marked as trending. Add movies to trending from the list below.</p>
+                </div>
+            </div>
+        <% } %>
+
+        <!-- All Movies Section -->
+        <div class="all-movies-section">
+            <div class="section-header">
+                <h2>All Movies</h2>
+            </div>
+        <div class="movies-table-container">
+            <% if (movies && movies.length > 0) { %>
+                <table class="movies-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Slug</th>
+                            <th>Genre</th>
+                            <th>Release Year</th>
+                            <th>Trending</th>
+                            <th>Created At</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% movies.forEach(movie => { %>
+                            <tr>
+                                <td><%= movie.id %></td>
+                                <td><%= movie.title %></td>
+                                <td><%= movie.slug %></td>
+                                <td><%= movie.genre || 'N/A' %></td>
+                                <td><%= movie.releaseYear || 'N/A' %></td>
+                                <td>
+                                    <% if (movie.isTrending) { %>
+                                        <span class="trending-badge">🔥 Trending</span>
+                                    <% } else { %>
+                                        <span class="not-trending">-</span>
+                                    <% } %>
+                                </td>
+                                <td><%= new Date(movie.createdAt).toLocaleDateString() %></td>
+                                <td class="actions">
+                                    <% if (movie.isTrending) { %>
+                                        <form method="POST" action="/admin/movies/trending/remove/<%= movie.id %>" style="display: inline;">
+                                            <button type="submit" class="btn btn-sm btn-trending-remove" title="Remove from Trending">Remove Trending</button>
+                                        </form>
+                                    <% } else { %>
+                                        <form method="POST" action="/admin/movies/trending/add/<%= movie.id %>" style="display: inline;">
+                                            <button type="submit" class="btn btn-sm btn-trending-add" title="Add to Trending">Add to Trending</button>
+                                        </form>
+                                    <% } %>
+                                    <a href="/admin/movies/edit/<%= movie.id %>" class="btn btn-sm btn-edit">Edit</a>
+                                    <form method="POST" action="/admin/movies/delete/<%= movie.id %>" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this movie?');">
+                                        <button type="submit" class="btn btn-sm btn-delete">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+
+                <!-- Pagination -->
+                <% if (totalPages > 1) { %>
+                    <div class="pagination">
+                        <% if (hasPrevPage) { %>
+                            <a href="/admin/movies?page=<%= currentPage - 1 %>" class="btn">Previous</a>
+                        <% } else { %>
+                            <span class="btn disabled">Previous</span>
+                        <% } %>
+
+                        <span class="page-info">
+                            Page <%= currentPage %> of <%= totalPages %> (<%= totalMovies %> total)
+                        </span>
+
+                        <% if (hasNextPage) { %>
+                            <a href="/admin/movies?page=<%= currentPage + 1 %>" class="btn">Next</a>
+                        <% } else { %>
+                            <span class="btn disabled">Next</span>
+                        <% } %>
+                    </div>
+                <% } %>
+            <% } else { %>
+                <div class="empty-state">
+                    <p>No movies found. <a href="/admin/movies/add">Add your first movie</a></p>
+                </div>
+            <% } %>
+        </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../../partials/admin_footer') %>
+
