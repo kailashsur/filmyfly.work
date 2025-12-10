@@ -36,3 +36,6 @@ yarn-error.log*
 # Prisma
 /generated/prisma
 prisma/migrations
+
+# not pushing the sitemap file
+sitemap.xml

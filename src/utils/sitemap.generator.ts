@@ -21,7 +21,7 @@ export async function generateSitemap(prisma: PrismaClient): Promise<void> {
     const setting = await prisma.setting.findUnique({
       where: { key: 'siteUrl' }
     });
-    const siteUrl = setting?.value || 'https://filmyfly.how';
+    const siteUrl = setting?.value || 'https://filmyfly.work';
     const baseUrl = siteUrl.replace(/\/$/, '');
     
     // Get current date in ISO format for lastmod
