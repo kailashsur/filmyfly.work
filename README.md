@@ -40,6 +40,7 @@ A modern Express.js backend application with EJS templating and TypeScript.
 │   └── js/
 │       └── main.js
 ├── dist/                      # Compiled JavaScript (generated)
+├── public/
 ├── package.json
 ├── tsconfig.json
 └── README.md
