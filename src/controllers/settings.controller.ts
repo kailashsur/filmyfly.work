@@ -10,6 +10,7 @@ export const getSettings = async (_req: AuthRequest, res: Response): Promise<voi
       orderBy: { key: 'asc' }
     });
 
+
     // Convert to key-value object for easier access in view
     const settingsObj: Record<string, string> = {};
     settings.forEach(setting => {

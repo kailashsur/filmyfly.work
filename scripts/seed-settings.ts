@@ -30,7 +30,7 @@ const prisma = new PrismaClient({
 const defaultSettings = [
   {
     key: 'downloadRedirectUrl',
-    value: 'https://kailashsur.in/top-investment-strategies-beginners/?redirect=',
+    value: '',
     description: 'Redirect URL for download links'
   },
   {

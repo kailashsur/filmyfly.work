@@ -391,7 +391,7 @@ export const getMoviePage = async (req: Request, res: Response, next: NextFuncti
     }
 
     // Fetch download redirect URL from settings
-    let downloadRedirectUrl = 'https://kailashsur.in/top-investment-strategies-beginners/?redirect=';
+    let downloadRedirectUrl = '';
     try {
       const setting = await prisma.setting.findUnique({
         where: { key: 'downloadRedirectUrl' }
