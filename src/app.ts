@@ -37,6 +37,8 @@ app.use(express.static(path.join(__dirname, '../public')));
 const allowedOrigins = [
   'http://localhost:3000',  // Old frontend
   'http://localhost:4321',  // Astro frontend
+  'https://filmyfly.work',
+  'https://www.filmyfly.work',
   process.env.FRONTEND_URL  // Production frontend
 ].filter((origin): origin is string => typeof origin === 'string');
 
