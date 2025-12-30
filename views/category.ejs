@@ -1,0 +1,57 @@
+<%- include('partials/header', { title: title }) %>
+
+<div class="container">
+    <h1><%= category.name %></h1>
+    <% if (category.description) { %>
+        <div align="center">
+            <h2><%= category.description %></h2>
+          </div>
+    <% } %>
+
+    
+
+    <% if (movies && movies.length > 0) { %>
+        <% movies.forEach(function(movie) { %>
+            <div class="fl">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="2%"></td>
+                        <td class="fl">
+                            <a href="/<%= movie.slug %>">
+                                <div align="center">
+                                    <img src="<%= movie.thumbnail || 'https://via.placeholder.com/70?text=No+Image' %>" width="70" alt="<%= movie.title %>" />
+                                </div>
+                            </a>
+                        </td>
+                        <td align="left" width="100%">
+                            <a href="/<%= movie.slug %>">
+                                <b><%= movie.title %><% if (movie.releaseYear) { %> (<%= movie.releaseYear %>)<% } %></b>
+                            </a><br />
+                            <font color="Red"></font>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        <% }); %>
+
+        <!-- Pagination -->
+        <% if (totalPages > 1) { %>
+            <div class="pagination">
+                <% if (hasPrevPage) { %>
+                    <a href="/page-cat/<%= category.id %>/<%= category.slug %>?page=<%= currentPage - 1 %>" class="btn">Previous</a>
+                <% } %>
+                
+                <span>Page <%= currentPage %> of <%= totalPages %></span>
+                
+                <% if (hasNextPage) { %>
+                    <a href="/page-cat/<%= category.id %>/<%= category.slug %>?page=<%= currentPage + 1 %>" class="btn">Next</a>
+                <% } %>
+            </div>
+        <% } %>
+    <% } else { %>
+        <p>No movies found in this category.</p>
+    <% } %>
+</div>
+
+<%- include('partials/footer') %>
+

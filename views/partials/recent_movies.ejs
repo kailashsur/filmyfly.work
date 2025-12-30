@@ -1,0 +1,43 @@
+<div align="center">
+    <h2>🔥🔥Latest Movies🔥🔥</h2>
+</div>
+<style>
+    .A10 {
+        background: -webkit-linear-gradient(top, #fcfeee 0%, #eeeeee 100%);
+        border-bottom: 1px solid#ccc;
+        font-weight: normal;
+        padding: 4px;
+    }
+</style>
+
+
+
+<% if (recentMovies && recentMovies.length> 0) { %>
+    <% recentMovies.forEach(movie=> { %>
+
+        <div class="A10">
+            <table width="100%">
+                <tr>
+                    <td width="63"><a href="<%= movie.slug %>"><img src="<%= movie.thumbnail || 'N/A' %>" width="60"
+                                height="65" /></a></td>
+                    <td align="left" width="100%"><a href="<%= movie.slug %>">
+                            <div class="movie-title" style="font-size: 15px;font-weight:bold;">
+                                <%= movie.title %>
+                            </div>
+                        </a>
+                        <div class="movie-keywords-badge" style="display: inline-block; 
+                            padding: 2px 6px; font-size: 10px; font-weight: bold; color: #fff; border-radius: 10px;">
+                            <%= movie.keywords || 'N/A' %>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <% }); %>
+            <% } else { %>
+                <p>No recent movies found</p>
+                <% } %>
+
+                    
+
+                    <!-- trending movies code end -->

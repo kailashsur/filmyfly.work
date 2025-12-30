@@ -1,0 +1,32 @@
+<%- include('../partials/admin_header', { title: title }) %>
+
+<div class="container">
+    <div class="admin-dashboard">
+        <div class="admin-header">
+            <h1><%= title %></h1>
+            <div class="admin-user-info">
+                <span>Welcome, <%= user?.email || 'Admin' %></span>
+                <a href="/admin" class="btn btn-secondary">Go to Dashboard</a>
+            </div>
+        </div>
+        
+        <!-- Check System Section -->
+        <div class="system-check-section">
+            <h2>Check System</h2>
+            <div class="system-status-grid">
+                <div class="status-card">
+                    <div class="status-header">
+                        <h3>Database Storage</h3>
+                    </div>
+                    <div class="status-details">
+                        <p class="database-size"><strong>Stored Data:</strong> <span class="size-value"><%= databaseStatus.size %></span></p>
+                        <p><strong>Last Checked:</strong> <%= databaseStatus.lastChecked %></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/admin_footer') %>
+

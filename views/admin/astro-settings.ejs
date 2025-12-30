@@ -1,0 +1,239 @@
+<%- include('../partials/admin_header', { title: title }) %>
+
+    <div class="container">
+        <div class="admin-dashboard">
+            <div class="admin-header">
+                <h1>
+                    <%= title %>
+                </h1>
+                <div class="admin-user-info">
+                    <a href="/admin" class="btn btn-secondary">Go to Dashboard</a>
+                </div>
+            </div>
+
+            <% if (error) { %>
+                <div class="alert alert-error">
+                    <%= error %>
+                </div>
+                <% } %>
+
+                    <% if (success) { %>
+                        <div class="alert alert-success">
+                            <%= success %>
+                        </div>
+                        <% } %>
+
+                            <div class="settings-section">
+                                <div class="info-box">
+                                    <strong>ℹ️ Note:</strong> These settings are specifically for the Astro frontend
+                                    website.
+                                    They are separate from the EJS backend settings and will be consumed by the Astro
+                                    frontend via the <code>/api/astro-settings</code> endpoint.
+                                </div>
+
+                                <form method="POST" action="/admin/astro-settings" class="settings-form">
+                                    <h3>General Settings</h3>
+                                    <div class="form-group">
+                                        <label for="siteUrl">Site URL</label>
+                                        <input type="url" id="siteUrl" name="siteUrl"
+                                            value="<%= settings.siteUrl || 'https://filmyfly.work' %>"
+                                            placeholder="https://filmyfly.work" class="form-control">
+                                        <small>Your Astro website URL (without trailing slash). Used in meta tags, Open
+                                            Graph, Twitter Card, etc.</small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="siteName">Site Name</label>
+                                        <input type="text" id="siteName" name="siteName"
+                                            value="<%= settings.siteName || 'FilmyFly' %>" placeholder="FilmyFly"
+                                            class="form-control">
+                                        <small>Your website name (used in meta tags and structured data)</small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="downloadRedirectUrl">Download Redirect URL</label>
+                                        <input type="url" id="downloadRedirectUrl" name="downloadRedirectUrl"
+                                            value="<%= settings.downloadRedirectUrl || '' %>"
+                                            placeholder="https://example.com/redirect" class="form-control">
+                                        <small>Redirect URL for movie downloads on Astro frontend</small>
+                                    </div>
+
+                                    <hr style="margin: 2rem 0; border: 1px solid #eee;" />
+
+                                    <h3>Social Media Links</h3>
+                                    <div class="form-group">
+                                        <label for="telegramLink">Telegram Channel Link</label>
+                                        <input type="url" id="telegramLink" name="telegramLink"
+                                            value="<%= settings.telegramLink || '' %>"
+                                            placeholder="https://telegram.me/filmyfly_news" class="form-control">
+                                        <small>Your Telegram channel or group link</small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="facebookLink">Facebook Page Link</label>
+                                        <input type="url" id="facebookLink" name="facebookLink"
+                                            value="<%= settings.facebookLink || '' %>"
+                                            placeholder="https://www.facebook.com/filmyfly" class="form-control">
+                                        <small>Your Facebook page URL</small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="twitterLink">Twitter Profile Link</label>
+                                        <input type="url" id="twitterLink" name="twitterLink"
+                                            value="<%= settings.twitterLink || '' %>"
+                                            placeholder="https://www.twitter.com/filmyfly" class="form-control">
+                                        <small>Your Twitter profile URL</small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="instagramLink">Instagram Profile Link</label>
+                                        <input type="url" id="instagramLink" name="instagramLink"
+                                            value="<%= settings.instagramLink || '' %>"
+                                            placeholder="https://www.instagram.com/filmyfly" class="form-control">
+                                        <small>Your Instagram profile URL</small>
+                                    </div>
+
+                                    <hr style="margin: 2rem 0; border: 1px solid #eee;" />
+
+                                    <h3>Google Tag Manager</h3>
+                                    <div class="form-group">
+                                        <label for="googleTagManagerHead">Google Tag Manager Code (for &lt;head&gt;
+                                            section)</label>
+                                        <textarea id="googleTagManagerHead" name="googleTagManagerHead" rows="5"
+                                            class="form-control code-textarea"
+                                            placeholder="<!-- Google Tag Manager -->&#10;&lt;script&gt;(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':&#10;new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],&#10;j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=&#10;'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);&#10;})(window,document,'script','dataLayer','GTM-XXXXXXX');&lt;/script&gt;&#10;&lt;!-- End Google Tag Manager --&gt;"><%= settings.googleTagManagerHead || '' %></textarea>
+                                        <small>Google Tag Manager code for Astro frontend &lt;head&gt; section</small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="googleTagManagerBody">Google Tag Manager Noscript Code (for
+                                            &lt;body&gt; section)</label>
+                                        <textarea id="googleTagManagerBody" name="googleTagManagerBody" rows="3"
+                                            class="form-control code-textarea"
+                                            placeholder="<!-- Google Tag Manager (noscript) -->&#10;&lt;noscript&gt;&lt;iframe src=&quot;https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX&quot;&#10;height=&quot;0&quot; width=&quot;0&quot; style=&quot;display:none;visibility:hidden&quot;&gt;&lt;/iframe&gt;&lt;/noscript&gt;&#10;&lt;!-- End Google Tag Manager (noscript) --&gt;"><%= settings.googleTagManagerBody || '' %></textarea>
+                                        <small>Google Tag Manager noscript code for Astro frontend &lt;body&gt;
+                                            section</small>
+                                    </div>
+
+                                    <hr style="margin: 2rem 0; border: 1px solid #eee;" />
+
+                                    <h3>Google Analytics</h3>
+                                    <div class="form-group">
+                                        <label for="googleAnalytics">Google Analytics Code (gtag.js)</label>
+                                        <textarea id="googleAnalytics" name="googleAnalytics" rows="8"
+                                            class="form-control code-textarea"
+                                            placeholder="<!-- Google tag (gtag.js) -->&#10;&lt;script async src=&quot;https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX&quot;&gt;&lt;/script&gt;&#10;&lt;script&gt;&#10;  window.dataLayer = window.dataLayer || [];&#10;  function gtag(){dataLayer.push(arguments);}&#10;  gtag('js', new Date());&#10;  gtag('config', 'G-XXXXXXXXXX');&#10;&lt;/script&gt;"><%= settings.googleAnalytics || '' %></textarea>
+                                        <small>Google Analytics code for Astro frontend</small>
+                                    </div>
+
+                                    <hr style="margin: 2rem 0; border: 1px solid #eee;" />
+
+                                    <h3>Google Search Console</h3>
+                                    <div class="form-group">
+                                        <label for="googleSearchConsole">Google Search Console Verification Meta
+                                            Tag</label>
+                                        <textarea id="googleSearchConsole" name="googleSearchConsole" rows="2"
+                                            class="form-control code-textarea"
+                                            placeholder="&lt;meta name=&quot;google-site-verification&quot; content=&quot;XXXXXXXXXXXXXXXXXXXXX&quot; /&gt;"><%= settings.googleSearchConsole || '' %></textarea>
+                                        <small>Google Search Console verification meta tag for Astro frontend</small>
+                                    </div>
+
+                                    <hr style="margin: 2rem 0; border: 1px solid #eee;" />
+
+                                    <h3>Ad Codes</h3>
+                                    <div class="form-group">
+                                        <label for="adsenseCode">Google AdSense Code</label>
+                                        <textarea id="adsenseCode" name="adsenseCode" rows="6"
+                                            class="form-control code-textarea"
+                                            placeholder="&lt;script async src=&quot;https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX&quot;&#10;     crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;"><%= settings.adsenseCode || '' %></textarea>
+                                        <small>Google AdSense code for Astro frontend</small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="adsteraCode">Adstera Ad Code</label>
+                                        <textarea id="adsteraCode" name="adsteraCode" rows="6"
+                                            class="form-control code-textarea"
+                                            placeholder="&lt;script type=&quot;text/javascript&quot;&gt;&#10;// Adstera ad code here&#10;&lt;/script&gt;"><%= settings.adsteraCode || '' %></textarea>
+                                        <small>Adstera ad code for Astro frontend</small>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn btn-primary">Save Astro Settings</button>
+                                        <a href="/admin" class="btn btn-secondary">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+        </div>
+    </div>
+
+    <style>
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+        }
+
+        .info-box code {
+            background: #fff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .settings-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+        }
+
+        .settings-form {
+            max-width: 800px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 0.5rem;
+            color: #666;
+            font-size: 0.875rem;
+        }
+
+        .settings-section h3 {
+            color: #2c3e50;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .settings-section h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .code-textarea {
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            resize: vertical;
+        }
+    </style>
+
+    <%- include('../partials/admin_footer') %>

@@ -1,0 +1,94 @@
+<%- include('../partials/admin_header', { title: title }) %>
+
+<div class="container">
+    <div class="login-container">
+        <div class="login-card">
+            <h1>Admin Login</h1>
+            <p class="subtitle">Sign in to access the admin dashboard</p>
+            
+            <% if (error) { %>
+                <div class="alert alert-error">
+                    <%= error %>
+                </div>
+            <% } %>
+
+            <form id="loginForm" method="POST" action="/admin/login">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required autocomplete="email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+    // Initialize Firebase
+    const firebaseConfig = {
+        apiKey: "<%= firebaseConfig.apiKey %>",
+        authDomain: "<%= firebaseConfig.authDomain %>",
+        projectId: "<%= firebaseConfig.projectId %>",
+        storageBucket: "<%= firebaseConfig.storageBucket %>",
+        messagingSenderId: "<%= firebaseConfig.messagingSenderId %>",
+        appId: "<%= firebaseConfig.appId %>"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Handle form submission
+    document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        
+        try {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Signing in...';
+            
+            // Sign in with Firebase
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const idToken = await userCredential.user.getIdToken();
+            
+            // Submit form with ID token
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/admin/login';
+            
+            const tokenInput = document.createElement('input');
+            tokenInput.type = 'hidden';
+            tokenInput.name = 'idToken';
+            tokenInput.value = idToken;
+            
+            form.appendChild(tokenInput);
+            document.body.appendChild(form);
+            form.submit();
+        } catch (error) {
+            console.error('Login error:', error);
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Sign In';
+            
+            // Show error message
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'alert alert-error';
+            errorDiv.textContent = error.message || 'Login failed. Please try again.';
+            document.querySelector('.login-card')?.insertBefore(errorDiv, document.querySelector('form'));
+        }
+    });
+</script>
+
+<%- include('../partials/admin_footer') %>
+

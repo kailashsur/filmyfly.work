@@ -1,0 +1,58 @@
+<div align="center">
+    <h2>🔥🔥 Treding Movies 🔥🔥</h2>
+  </div>
+  <style>
+    .A10 {
+      background: -webkit-linear-gradient(top, #fcfeee 0%, #eeeeee 100%);
+      border-bottom: 1px solid#ccc;
+      font-weight: normal;
+      padding: 4px;
+    }
+  </style>
+
+
+  <% if (trendingMovies && trendingMovies.length > 0) { %>
+    <% trendingMovies.forEach(movie => { %>
+  <div class="A10">
+    <table width="100%">
+      <tr>
+        <td width="63"><a
+            href="<%= movie.slug %>"><img
+              src="<%= movie.thumbnail || 'N/A' %>"
+              width="60" height="65" /></a></td>
+        <td align="left" width="100%"><a
+            href="<%= movie.slug %>">
+            <div class="movie-title" style="font-size: 15px;font-weight:bold;"><%= movie.title %></div>
+          </a>
+          <div class="movie-keywords-badge"
+            style="display: inline-block; padding: 2px 6px; font-size: 10px; font-weight: bold; color: #fff; border-radius: 10px;">
+            <%= movie.keywords || 'N/A' %>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <% }); %>
+  <% } else { %>
+    <p>No trending movies found</p>
+  <% } %>
+
+
+
+
+  
+<script>
+    document.querySelectorAll('.movie-title').forEach(function(title) {
+        var randomColor;
+        var brightness;
+        do {
+            randomColor = Math.floor(Math.random() * 16777215).toString(16);
+            var hex = randomColor.padStart(6, '0');
+            var r = parseInt(hex.substr(0, 2), 16);
+            var g = parseInt(hex.substr(2, 2), 16);
+            var b = parseInt(hex.substr(4, 2), 16);
+            brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        } while (brightness > 200);
+        title.style.color = '#' + randomColor.padStart(6, '0');
+    });
+</script>

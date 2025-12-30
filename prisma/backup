@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  name       String
+  email      String
+  password   String
+  role       String    @default("user")
+  status     String    @default("active")
+  createdAt  DateTime  @default(now()) @map("createdAt")
+  updatedAt  DateTime  @updatedAt @map("updatedAt")
+  created_at DateTime? @db.Timestamptz(6)
+  updated_at DateTime? @db.Timestamptz(6)
+
+  @@map("users")
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String?  @unique
+  slug        String?  @unique
+  description String?
+  createdAt   DateTime @default(now()) @map("createdAt")
+  updatedAt   DateTime @updatedAt @map("updatedAt")
+
+  movies Movie[]
+
+  @@map("categories")
+}
+
+model Movie {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String?  @unique(map: "idx_movies_slug")
+  description String?
+  thumbnail   String?
+  genre       String?
+  languages   String?
+  duration    String?
+  releaseYear Int?     @map("releaseYear")
+  cast        String?
+  sizes       String?
+  downloadUrl String?  @map("downloadUrl")
+  screenshot  String?
+  keywords    String?
+
+  categoryId Int?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  trendingMovie TrendingMovie?
+
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  @@map("movies")
+}
+
+model TrendingMovie {
+  id        Int   @id @default(autoincrement())
+  movieId   Int   @unique
+  order     Int?  @default(0)
+
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  @@map("trending_movies")
+}
+
+
+model Setting {
+  id          Int       @id @default(autoincrement())
+  key         String?   @unique(map: "idx_settings_key")
+  value       String
+  description String?
+  createdAt   DateTime  @default(now()) @map("createdAt")
+  updatedAt   DateTime  @updatedAt @map("updatedAt")
+  created_at  DateTime? @db.Timestamptz(6)
+  updated_at  DateTime? @db.Timestamptz(6)
+
+  @@map("settings")
+}
+
+model StaticPage {
+  id               Int       @id @default(autoincrement())
+  title            String
+  slug             String?   @unique(map: "idx_static_pages_slug")
+  content          String
+  metaTitle        String?
+  metaDescription  String?
+  metaKeywords     String?
+  isPublished      Boolean   @default(true)
+  createdAt        DateTime  @default(now()) @map("createdAt")
+  updatedAt        DateTime  @updatedAt @map("updatedAt")
+  meta_title       String?
+  meta_description String?
+  meta_keywords    String?
+  is_published     Boolean?  @default(true)
+  created_at       DateTime? @db.Timestamptz(6)
+  updated_at       DateTime? @db.Timestamptz(6)
+
+  @@map("static_pages")
+}
+
+model AstroSetting {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique
+  value       String   @db.Text
+  description String?  @db.Text
+  createdAt   DateTime @default(now()) @map("createdAt")
+  updatedAt   DateTime @updatedAt @map("updatedAt")
+
+  @@map("astro_settings")
+}

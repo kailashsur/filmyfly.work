@@ -1,0 +1,69 @@
+<%- include('partials/header', { title: title, metaDescription: metaDescription, metaKeywords: metaKeywords }) %>
+
+<div class="container">
+    <div class="static-page-content">
+        <h1><%= page.title %></h1>
+        <div class="page-meta">
+            <small>Last updated: <%= new Date(page.updatedAt).toLocaleDateString() %></small>
+        </div>
+        <div class="page-body">
+            <%- page.content %>
+        </div>
+    </div>
+</div>
+
+<style>
+.static-page-content {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.static-page-content h1 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    border-bottom: 3px solid #3498db;
+    padding-bottom: 0.5rem;
+}
+
+.page-meta {
+    color: #666;
+    margin-bottom: 2rem;
+    font-style: italic;
+}
+
+.page-body {
+    line-height: 1.8;
+    color: #333;
+}
+
+.page-body p {
+    margin-bottom: 1rem;
+}
+
+.page-body h2, .page-body h3 {
+    color: #2c3e50;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.page-body ul, .page-body ol {
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+}
+
+.page-body a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+.page-body a:hover {
+    text-decoration: underline;
+}
+</style>
+
+<%- include('partials/footer') %>
+

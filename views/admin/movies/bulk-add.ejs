@@ -1,0 +1,281 @@
+<%- include('../../partials/admin_header', { title: title }) %>
+
+<div class="container">
+    <div class="admin-form-page">
+        <div class="page-header">
+            <h1>Bulk Add Movies</h1>
+            <div class="header-actions">
+                <a href="/admin" class="btn btn-secondary">Go to Dashboard</a>
+                <a href="/admin/movies" class="btn btn-secondary">Back to List</a>
+            </div>
+        </div>
+
+        <% if (error) { %>
+            <div class="alert alert-error">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <% if (success) { %>
+            <div class="alert alert-success">
+                <%= success %>
+            </div>
+        <% } %>
+
+        <% if (results) { %>
+            <div class="bulk-results">
+                <h2>Import Results</h2>
+                <div class="results-summary">
+                    <div class="result-stat">
+                        <span class="stat-label">Total:</span>
+                        <span class="stat-value"><%= results.total %></span>
+                    </div>
+                    <div class="result-stat success">
+                        <span class="stat-label">Success:</span>
+                        <span class="stat-value"><%= results.success %></span>
+                    </div>
+                    <div class="result-stat failed">
+                        <span class="stat-label">Failed:</span>
+                        <span class="stat-value"><%= results.failed %></span>
+                    </div>
+                </div>
+
+                <% if (results.errors && results.errors.length > 0) { %>
+                    <div class="errors-list">
+                        <h3>Errors:</h3>
+                        <table class="errors-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                    <th>Error</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% results.errors.forEach(err => { %>
+                                    <tr>
+                                        <td><%= err.index %></td>
+                                        <td><%= err.title %></td>
+                                        <td class="error-text"><%= err.error %></td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } %>
+            </div>
+        <% } %>
+
+        <div class="bulk-add-container">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="json">JSON Format</button>
+                <button class="tab-btn" data-tab="csv">CSV Format</button>
+                <button class="tab-btn" data-tab="form">Form Entry</button>
+            </div>
+
+            <!-- JSON Tab -->
+            <div class="tab-content active" id="json-tab">
+                <div class="form-group">
+                    <label for="jsonData">JSON Data</label>
+                    <textarea id="jsonData" name="jsonData" rows="15" class="code-input" placeholder='[
+  {
+    "title": "Movie Title 1",
+    "slug": "movie-title-1",
+    "description": "Movie description",
+    "genre": "Action",
+    "releaseYear": 2024
+  },
+  {
+    "title": "Movie Title 2",
+    "slug": "movie-title-2",
+    "description": "Another movie",
+    "genre": "Drama",
+    "releaseYear": 2023
+  }
+]'></textarea>
+                    <small>Enter movies as a JSON array. Each movie should have at least "title" and "slug" fields.</small>
+                </div>
+            </div>
+
+            <!-- CSV Tab -->
+            <div class="tab-content" id="csv-tab">
+                <div class="form-group">
+                    <label for="csvData">CSV Data</label>
+                    <textarea id="csvData" name="csvData" rows="15" class="code-input" placeholder='title,slug,description,genre,releaseYear
+Movie Title 1,movie-title-1,Movie description,Action,2024
+Movie Title 2,movie-title-2,Another movie,Drama,2023'></textarea>
+                    <small>First row should contain headers. Supported columns: title, slug, description, genre, languages, duration, releaseYear, cast, sizes, downloadUrl, screenshot, keywords</small>
+                </div>
+            </div>
+
+            <!-- Form Tab -->
+            <div class="tab-content" id="form-tab">
+                <div id="movies-form-container">
+                    <div class="movie-entry" data-index="0">
+                        <h3>Movie 1</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Title *</label>
+                                <input type="text" name="movies[0][title]" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Slug *</label>
+                                <input type="text" name="movies[0][slug]" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea name="movies[0][description]" rows="3"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Genre</label>
+                                <input type="text" name="movies[0][genre]">
+                            </div>
+                            <div class="form-group">
+                                <label>Release Year</label>
+                                <input type="number" name="movies[0][releaseYear]">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" id="add-movie-entry" class="btn btn-secondary">+ Add Another Movie</button>
+            </div>
+
+            <form method="POST" action="/admin/movies/bulk-add" id="bulk-form">
+                <input type="hidden" name="moviesData" id="moviesData">
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Import Movies</button>
+                    <a href="/admin/movies" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tabName = btn.dataset.tab;
+            
+            // Update active tab button
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Update active tab content
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        });
+    });
+
+    // Form submission handler
+    document.getElementById('bulk-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const activeTab = document.querySelector('.tab-content.active');
+        const moviesDataInput = document.getElementById('moviesData');
+        
+        if (activeTab.id === 'json-tab') {
+            const jsonData = document.getElementById('jsonData').value;
+            if (!jsonData.trim()) {
+                alert('Please enter JSON data');
+                return;
+            }
+            try {
+                JSON.parse(jsonData); // Validate JSON
+                moviesDataInput.value = jsonData;
+            } catch (error) {
+                alert('Invalid JSON format. Please check your data.');
+                return;
+            }
+        } else if (activeTab.id === 'csv-tab') {
+            const csvData = document.getElementById('csvData').value;
+            if (!csvData.trim()) {
+                alert('Please enter CSV data');
+                return;
+            }
+            moviesDataInput.value = csvData;
+        } else if (activeTab.id === 'form-tab') {
+            const formData = new FormData();
+            const movies = [];
+            const entries = document.querySelectorAll('.movie-entry');
+            
+            entries.forEach(entry => {
+                const movie = {};
+                entry.querySelectorAll('input, textarea').forEach(input => {
+                    const name = input.name.match(/\[(\d+)\]\[(\w+)\]/);
+                    if (name && input.value) {
+                        movie[name[2]] = input.value;
+                    }
+                });
+                if (movie.title && movie.slug) {
+                    movies.push(movie);
+                }
+            });
+            
+            if (movies.length === 0) {
+                alert('Please add at least one movie with title and slug');
+                return;
+            }
+            
+            moviesDataInput.value = JSON.stringify(movies);
+        }
+        
+        e.target.submit();
+    });
+
+    // Add movie entry
+    let movieIndex = 1;
+    document.getElementById('add-movie-entry')?.addEventListener('click', () => {
+        const container = document.getElementById('movies-form-container');
+        const newEntry = document.createElement('div');
+        newEntry.className = 'movie-entry';
+        newEntry.dataset.index = movieIndex;
+        newEntry.innerHTML = `
+            <h3>Movie ${movieIndex + 1}</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Title *</label>
+                    <input type="text" name="movies[${movieIndex}][title]" required>
+                </div>
+                <div class="form-group">
+                    <label>Slug *</label>
+                    <input type="text" name="movies[${movieIndex}][slug]" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="movies[${movieIndex}][description]" rows="3"></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Genre</label>
+                    <input type="text" name="movies[${movieIndex}][genre]">
+                </div>
+                <div class="form-group">
+                    <label>Release Year</label>
+                    <input type="number" name="movies[${movieIndex}][releaseYear]">
+                </div>
+            </div>
+            <button type="button" class="btn btn-sm btn-delete remove-entry">Remove</button>
+        `;
+        container.appendChild(newEntry);
+        movieIndex++;
+        
+        // Add remove functionality
+        newEntry.querySelector('.remove-entry')?.addEventListener('click', () => {
+            newEntry.remove();
+        });
+    });
+
+    // Remove entry handlers
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('remove-entry')) {
+            e.target.closest('.movie-entry')?.remove();
+        }
+    });
+</script>
+
+<%- include('../../partials/admin_footer') %>
+
